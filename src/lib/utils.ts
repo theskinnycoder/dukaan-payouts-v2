@@ -6,7 +6,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCurrency(value: number | string) {
-  // Indian Rupee
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
