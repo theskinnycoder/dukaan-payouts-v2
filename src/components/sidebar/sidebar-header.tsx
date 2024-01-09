@@ -1,9 +1,9 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ChevronDown } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { LuChevronDown as ChevronDownIcon } from "react-icons/lu"
 import useSidebar from "./hooks/use-sidebar"
 
 export default function SidebarHeader() {
@@ -39,7 +39,7 @@ export default function SidebarHeader() {
 
       {/* Toggle Button */}
       <Button size="icon">
-        <ChevronDown size={26} />
+        <ChevronDownIcon size={26} />
       </Button>
     </div>
   )
