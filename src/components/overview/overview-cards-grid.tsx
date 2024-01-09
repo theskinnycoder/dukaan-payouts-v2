@@ -1,14 +1,48 @@
-import { overviewData } from "@/lib/data"
+import db from "@/lib/db"
 import { DURATION } from "@/lib/types"
+import { generateDate } from "@/lib/utils"
 import OverviewCard from "./overview-card"
 
 async function getData(duration: DURATION) {
-  const data = overviewData.map(({ value, ...rest }) => ({
-    ...rest,
-    value: typeof value === "number" ? value * duration : value,
-  }))
+  const date = generateDate(duration)
 
-  return { data }
+  const data = await db.order.aggregate({
+    _sum: {
+      amount: true,
+      transaction_fee: true,
+    },
+    where: {
+      createdAt: {
+        gte: date,
+      },
+    },
+  })
+
+  const total = await db.order.count({
+    where: {
+      createdAt: {
+        gte: date,
+      },
+    },
+  })
+
+  const totalAmount =
+    typeof data._sum.amount === "number" ? data._sum.amount : 0
+
+  return {
+    data: [
+      {
+        label: "Online orders",
+        value: total,
+        formatter: "number" as const,
+      },
+      {
+        label: "Amount received",
+        value: totalAmount,
+        formatter: "currency" as const,
+      },
+    ],
+  }
 }
 
 interface OverviewCardsGridProps {
@@ -26,7 +60,7 @@ export default async function OverviewCardsGrid({
         <OverviewCard
           key={card.label}
           label={card.label}
-          value={card.value}
+          value={`${card.value}`}
           formatter={card.formatter}
         />
       ))}

@@ -1,7 +1,13 @@
 import Header from "@/components/header"
 import Overview from "@/components/overview"
 import Sidebar from "@/components/sidebar"
-import { DURATION, SearchParams } from "@/lib/types"
+import Transactions from "@/components/transactions"
+import {
+  DURATION,
+  OrderSortableColumn,
+  SearchParams,
+  SortDirection,
+} from "@/lib/types"
 import { Suspense } from "react"
 
 interface HomePageProps {
@@ -9,7 +15,13 @@ interface HomePageProps {
 }
 
 export default function HomePage({ searchParams }: HomePageProps) {
-  const duration = (searchParams.duration ?? 30) as DURATION
+  const duration = (
+    searchParams?.duration ? parseInt(searchParams?.duration) : 30
+  ) as DURATION
+  const page = typeof searchParams.page === "string" ? +searchParams.page : 1
+  const sortBy = (searchParams.sortBy ?? "createdAt") as OrderSortableColumn
+  const sortDirection = (searchParams.sortDirection ?? "desc") as SortDirection
+  const q = searchParams.q ?? ""
 
   return (
     <main className="min-h-screen flex-col items-stretch justify-stretch grid grid-cols-12 w-full gap-0">
@@ -39,6 +51,8 @@ export default function HomePage({ searchParams }: HomePageProps) {
           <Overview.Header
             withDropdown
             duration={duration}
+            sortBy={sortBy}
+            sortDirection={sortDirection}
           />
 
           {/* Cards */}
@@ -46,6 +60,15 @@ export default function HomePage({ searchParams }: HomePageProps) {
             <Overview.CardsGrid duration={duration} />
           </Suspense>
         </Overview>
+
+        {/* Transactions */}
+        <Transactions
+          duration={duration}
+          page={page}
+          sortBy={sortBy}
+          sortDirection={sortDirection}
+          q={q}
+        />
       </section>
     </main>
   )

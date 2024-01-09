@@ -1,57 +1,51 @@
-"use client"
-
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { DURATION } from "@/lib/types"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useCallback } from "react"
-import { items } from "./overview-header"
+import {
+  DURATION,
+  OrderSortableColumn,
+  SortDirection,
+  durationItems,
+} from "@/lib/types"
+import { getLinkHref } from "@/lib/utils"
+import Link from "next/link"
 
 interface OverviewDropdownProps {
   children?: React.ReactNode
+  duration?: DURATION
+  sortBy?: OrderSortableColumn
+  sortDirection?: SortDirection
 }
 
-export default function OverviewDropdown({ children }: OverviewDropdownProps) {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const duration = Number(searchParams.get("duration") ?? 30) as DURATION
-
-  const createQueryString = useCallback(
-    (name: string, value: unknown) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set(name, `${value}`)
-
-      return params.toString()
-    },
-    [searchParams],
-  )
-
+export default function OverviewDropdown({
+  children,
+  duration = 30,
+  sortBy = "createdAt",
+  sortDirection = "desc",
+}: OverviewDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent>
-        {items.map((item) => (
-          <DropdownMenuCheckboxItem
+        {durationItems.map((item) => (
+          <Link
             key={item.id}
-            checked={duration === item.id}
-            onCheckedChange={() => {
-              if (item.id === 30) {
-                router.push(pathname)
-                return
-              }
-
-              router.push(
-                pathname + "?" + createQueryString("duration", item.id),
-              )
-            }}
+            href={getLinkHref({
+              duration: item.id,
+              sortBy,
+              sortDirection,
+            })}
           >
-            {item.label}
-          </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={duration === item.id}
+              className="cursor-pointer"
+            >
+              {item.label}
+            </DropdownMenuCheckboxItem>
+          </Link>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>

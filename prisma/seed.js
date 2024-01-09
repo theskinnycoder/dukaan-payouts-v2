@@ -1,7 +1,13 @@
 const { PrismaClient } = require("@prisma/client")
 
 const generateRandomFiveDigitNumber = () => {
-  return Math.floor(10000 + Math.random() * 90000)
+  return `${Math.floor(10000 + Math.random() * 90000)}`
+}
+
+const generateRandomDateInThePastMonth = () => {
+  const date = new Date()
+  date.setDate(date.getDate() - Math.floor(Math.random() * 30))
+  return date
 }
 
 const prisma = new PrismaClient()
@@ -16,7 +22,7 @@ async function load() {
     for (let i = 0; i < 360; i++) {
       const order = {
         id: generateRandomFiveDigitNumber(),
-        createdAt: new Date(),
+        createdAt: generateRandomDateInThePastMonth(),
         amount: Math.floor(Math.random() * 1000),
         transaction_fee: Math.floor(Math.random() * 100),
       }

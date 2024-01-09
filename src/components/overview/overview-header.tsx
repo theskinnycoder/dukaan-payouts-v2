@@ -1,23 +1,25 @@
 import { Button } from "@/components/ui/button"
-import { DURATION } from "@/lib/types"
+import {
+  DURATION,
+  OrderSortableColumn,
+  SortDirection,
+  durationItems,
+} from "@/lib/types"
 import { TbChevronDown } from "react-icons/tb"
 import OverviewDropdown from "./overview-dropdown"
 
 interface OverviewHeaderProps {
   duration?: DURATION
+  sortBy?: OrderSortableColumn
+  sortDirection?: SortDirection
   withDropdown?: boolean
 }
 
-export const items = [
-  { id: 1, label: "Today" },
-  { id: 2, label: "Yesterday" },
-  { id: 7, label: "Last week" },
-  { id: 30, label: "Last Month" },
-] as const
-
 export default function OverviewHeader({
-  duration,
-  withDropdown,
+  duration = 30,
+  sortBy = "createdAt",
+  sortDirection = "desc",
+  withDropdown = true,
 }: OverviewHeaderProps) {
   return (
     <div className="flex items-center justify-between">
@@ -27,12 +29,19 @@ export default function OverviewHeader({
       {withDropdown && (
         <>
           {/* Dropdown Menu */}
-          <OverviewDropdown>
+          <OverviewDropdown
+            duration={duration}
+            sortBy={sortBy}
+            sortDirection={sortDirection}
+          >
             <Button
               variant="outline"
               className="bg-white flex items-center space-x-3.5 text-base text-neutral-700 font-normal"
             >
-              <span>{items.find((item) => item.id === +duration!)?.label}</span>
+              <span>
+                {durationItems.find((item) => item.id === +duration!)?.label ??
+                  "Last Month"}
+              </span>
               <TbChevronDown size={18} />
             </Button>
           </OverviewDropdown>
