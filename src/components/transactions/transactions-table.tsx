@@ -27,6 +27,8 @@ async function getData({
 }: GetDataParams) {
   const date = generateDate(duration)
 
+  if (page < 1) page = 1
+
   const orders = await db.order.findMany({
     where: {
       id: {

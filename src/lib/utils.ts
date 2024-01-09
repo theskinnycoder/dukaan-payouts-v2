@@ -19,11 +19,13 @@ export function formatDate(date: string | Date) {
 }
 
 export function getLinkHref({
+  page = 1,
   sortBy = "createdAt",
   sortDirection = "desc",
   duration = 30,
   q = "",
 }: {
+  page?: number
   sortBy?: OrderSortableColumn
   sortDirection?: SortDirection
   duration?: DURATION
@@ -47,6 +49,10 @@ export function getLinkHref({
 
   if (q) {
     qp.push(`q=${q}`)
+  }
+
+  if (page !== 1) {
+    qp.push(`page=${page}`)
   }
 
   return href + (qp.length ? `?${qp.join("&")}` : "")

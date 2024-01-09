@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -6,11 +8,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { DURATION, OrderSortableColumn } from "@/lib/types"
-import { getLinkHref } from "@/lib/utils"
-import Link from "next/link"
+import { cn, getLinkHref } from "@/lib/utils"
+import { useRouter } from "next/navigation"
+import { useTransition } from "react"
 import {
   TbDownload as DownloadIcon,
   TbArrowsUpDown as SortIcon,
+  TbLoader2 as SpinnerIcon,
 } from "react-icons/tb"
 import columns from "./columns"
 import TransactionTableSearch from "./transaction-table-search"
@@ -26,6 +30,9 @@ export default function TransactionsTableHeader({
   duration = 30,
   q = "",
 }: TransactionsTableHeaderProps) {
+  const [isPending, startTransition] = useTransition()
+  const { push } = useRouter()
+
   return (
     <div className="flex items-center justify-between">
       {/* Search */}
@@ -33,6 +40,14 @@ export default function TransactionsTableHeader({
 
       {/* Actions */}
       <div className="flex items-center space-x-3">
+        {/* Spinner */}
+        <SpinnerIcon
+          className={cn(
+            "animate-spin",
+            isPending ? "opacity-100" : "opacity-0",
+          )}
+        />
+
         {/* Sort Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -49,25 +64,28 @@ export default function TransactionsTableHeader({
               />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
+          <DropdownMenuContent>
             {columns
               .filter((column) => column.sortingEnabled)
               .map((column) => (
-                <Link
+                <DropdownMenuCheckboxItem
                   key={column.id}
-                  href={getLinkHref({
-                    duration,
-                    sortBy: column.id,
-                    sortDirection: "desc",
-                  })}
+                  checked={sortBy === column.id}
+                  onClick={() => {
+                    startTransition(() => {
+                      push(
+                        getLinkHref({
+                          duration,
+                          sortBy: column.id,
+                          sortDirection: "desc",
+                        }),
+                      )
+                    })
+                  }}
+                  className="cursor-pointer"
                 >
-                  <DropdownMenuCheckboxItem
-                    checked={sortBy === column.id}
-                    className="cursor-pointer"
-                  >
-                    {column.label}
-                  </DropdownMenuCheckboxItem>
-                </Link>
+                  {column.label}
+                </DropdownMenuCheckboxItem>
               ))}
           </DropdownMenuContent>
         </DropdownMenu>

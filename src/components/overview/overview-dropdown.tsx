@@ -1,3 +1,5 @@
+"use client"
+
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -10,8 +12,10 @@ import {
   SortDirection,
   durationItems,
 } from "@/lib/types"
-import { getLinkHref } from "@/lib/utils"
-import Link from "next/link"
+import { cn, getLinkHref } from "@/lib/utils"
+import { useRouter } from "next/navigation"
+import { useTransition } from "react"
+import { TbLoader2 as SpinnerIcon } from "react-icons/tb"
 
 interface OverviewDropdownProps {
   children?: React.ReactNode
@@ -26,28 +30,40 @@ export default function OverviewDropdown({
   sortBy = "createdAt",
   sortDirection = "desc",
 }: OverviewDropdownProps) {
+  const { push } = useRouter()
+  const [isPending, startTransition] = useTransition()
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {durationItems.map((item) => (
-          <Link
-            key={item.id}
-            href={getLinkHref({
-              duration: item.id,
-              sortBy,
-              sortDirection,
-            })}
-          >
+    <div className="flex items-center space-x-2 relative">
+      {/* Spinner */}
+      <SpinnerIcon
+        className={cn("animate-spin", isPending ? "opacity-100" : "opacity-0")}
+      />
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {durationItems.map((item) => (
             <DropdownMenuCheckboxItem
+              key={item.id}
               checked={duration === item.id}
-              className="cursor-pointer"
+              onClick={() => {
+                startTransition(() => {
+                  push(
+                    getLinkHref({
+                      duration: item.id,
+                      sortBy,
+                      sortDirection,
+                    }),
+                  )
+                })
+              }}
             >
               {item.label}
             </DropdownMenuCheckboxItem>
-          </Link>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   )
 }

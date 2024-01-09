@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -8,11 +10,13 @@ import {
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DURATION, OrderSortableColumn, SortDirection } from "@/lib/types"
 import { cn, getLinkHref } from "@/lib/utils"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useTransition } from "react"
 import {
   TbSortAscending as AscendingIcon,
   TbChevronDown as ChevronDownIcon,
   TbSortDescending as DescendingIcon,
+  TbLoader2 as SpinnerIcon,
 } from "react-icons/tb"
 import columns from "./columns"
 
@@ -27,6 +31,9 @@ export default function TransactionTableHead({
   sortDirection = "desc",
   sortBy = "createdAt",
 }: TransactionsTableHeadProps) {
+  const [isPending, startTransition] = useTransition()
+  const { push } = useRouter()
+
   return (
     <TableHeader>
       <TableRow>
@@ -52,45 +59,55 @@ export default function TransactionTableHead({
                         className="bg-transparent font-normal px-2 py-1"
                       >
                         <span className="mr-2">{column.label}</span>
-                        <ChevronDownIcon size={16} />
+                        {isPending ? (
+                          <SpinnerIcon className={cn("animate-spin")} />
+                        ) : (
+                          <ChevronDownIcon size={16} />
+                        )}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       {/* Ascending */}
-                      <Link
+                      <DropdownMenuCheckboxItem
                         key={column.id}
-                        href={getLinkHref({
-                          duration,
-                          sortBy: column.id,
-                          sortDirection: "asc",
-                        })}
+                        checked={sortDirection === "asc"}
+                        onClick={() => {
+                          startTransition(() => {
+                            push(
+                              getLinkHref({
+                                duration,
+                                sortBy: column.id,
+                                sortDirection: "asc",
+                              }),
+                            )
+                          })
+                        }}
+                        className="flex items-center space-x-2 cursor-pointer"
                       >
-                        <DropdownMenuCheckboxItem
-                          checked={sortDirection === "asc"}
-                          className="flex items-center space-x-2 cursor-pointer"
-                        >
-                          <AscendingIcon size={16} />
-                          <span>ASC</span>
-                        </DropdownMenuCheckboxItem>
-                      </Link>
+                        <AscendingIcon size={16} />
+                        <span>ASC</span>
+                      </DropdownMenuCheckboxItem>
 
                       {/* Descending */}
-                      <Link
+                      <DropdownMenuCheckboxItem
                         key={column.id}
-                        href={getLinkHref({
-                          duration,
-                          sortBy: column.id,
-                          sortDirection: "desc",
-                        })}
+                        checked={sortDirection === "desc"}
+                        onClick={() => {
+                          startTransition(() => {
+                            push(
+                              getLinkHref({
+                                duration,
+                                sortBy: column.id,
+                                sortDirection: "desc",
+                              }),
+                            )
+                          })
+                        }}
+                        className="flex items-center space-x-2 cursor-pointer"
                       >
-                        <DropdownMenuCheckboxItem
-                          checked={sortDirection === "desc"}
-                          className="flex items-center space-x-2 cursor-pointer"
-                        >
-                          <DescendingIcon size={16} />
-                          <span>DESC</span>
-                        </DropdownMenuCheckboxItem>
-                      </Link>
+                        <DescendingIcon size={16} />
+                        <span>DESC</span>
+                      </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (

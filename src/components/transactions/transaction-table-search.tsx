@@ -5,7 +5,10 @@ import { DURATION, OrderSortableColumn, SortDirection } from "@/lib/types"
 import { getLinkHref } from "@/lib/utils"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useTransition } from "react"
-import { TbSearch as SearchIcon, TbLoader2 } from "react-icons/tb"
+import {
+  TbSearch as SearchIcon,
+  TbLoader2 as SpinnerIcon,
+} from "react-icons/tb"
 
 interface TransactionTableSearchProps {
   q?: string
@@ -60,7 +63,7 @@ export default function TransactionTableSearch({
 
       {isPending && (
         <div className="absolute right-0 ml-12 top-1/2 transform -translate-y-1/2">
-          <TbLoader2 className="animate-spin" />
+          <SpinnerIcon className="animate-spin" />
         </div>
       )}
     </div>
