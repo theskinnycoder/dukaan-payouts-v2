@@ -33,8 +33,8 @@ export type SIDEBAR_DATA = {
 
 export const sidebarData = {
   user: {
-    name: "Nishyan",
-    image: "https://i.pravatar.cc/300",
+    name: "Rahul",
+    image: "https://avatars.githubusercontent.com/u/64031854?v=4",
   },
   links: [
     {
