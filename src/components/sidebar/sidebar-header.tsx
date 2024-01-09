@@ -19,27 +19,27 @@ export default function SidebarHeader() {
       <Image
         src={image}
         alt={name}
-        className="rounded-md"
-        width={54}
-        height={54}
+        className="rounded-lg"
+        width={50}
+        height={50}
       />
 
-      <div className="flex flex-col space-y-1 flex-1">
+      <div className="flex flex-col space-y-0.5 flex-1">
         {/* Name */}
-        <span className="text-lg">{name}</span>
+        <span>{name}</span>
 
         {/* Visit Store Link */}
         <Link
           href="#"
-          className="underline text-muted-foreground font-light underline-offset-4"
+          className="underline text-muted-foreground font-light underline-offset-4 text-sm"
         >
-          Visit Store
+          Visit store
         </Link>
       </div>
 
       {/* Toggle Button */}
       <Button size="icon">
-        <ChevronDown size={30} />
+        <ChevronDown size={26} />
       </Button>
     </div>
   )

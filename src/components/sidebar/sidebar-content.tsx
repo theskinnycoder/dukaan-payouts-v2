@@ -15,7 +15,7 @@ export default function SidebarContent() {
           key={link.name}
           href={link.href}
         >
-          <div className="flex items-center gap-3.5 font-normal hover:bg-muted/10 px-3 py-1.5 rounded-md group transition-all duration-75 ease-in-out -mx-3">
+          <div className="flex items-center gap-3.5 font-normal hover:bg-muted/10 px-3 py-1.5 rounded-md group transition-all duration-75 ease-in-out -mx-2">
             <link.icon className="w-5 h-5 group-hover:text-white" />
             <span className="group-hover:text-white">{link.name}</span>
           </div>

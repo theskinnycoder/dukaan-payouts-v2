@@ -10,12 +10,13 @@ interface SidebarProps {
 export default function Sidebar({ children }: SidebarProps) {
   return (
     <SidebarProvider>
-      <aside className="flex flex-col space-y-12 text-left bg-primary text-primary-foreground p-5 h-full max-h-screen">
+      <aside className="flex flex-col space-y-12 text-left bg-primary text-primary-foreground py-4 px-5 h-full max-h-screen">
         {children}
       </aside>
     </SidebarProvider>
   )
 }
+
 Sidebar.Header = SidebarHeader
 Sidebar.Content = SidebarContent
 Sidebar.Footer = SidebarFooter

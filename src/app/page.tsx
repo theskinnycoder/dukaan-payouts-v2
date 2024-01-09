@@ -1,4 +1,5 @@
 import Header from "@/components/header"
+import Overview from "@/components/overview"
 import Sidebar from "@/components/sidebar"
 
 export default function Home() {
@@ -25,6 +26,13 @@ export default function Home() {
         </Header>
 
         {/* Overview Cards */}
+        <Overview>
+          {/* Header */}
+          <Overview.Header withDropdown />
+
+          {/* Cards */}
+          <Overview.CardsGrid />
+        </Overview>
       </section>
     </main>
   )
