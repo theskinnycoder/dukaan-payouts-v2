@@ -1,8 +1,16 @@
 import Header from "@/components/header"
 import Overview from "@/components/overview"
 import Sidebar from "@/components/sidebar"
+import { DURATION, SearchParams } from "@/lib/types"
+import { Suspense } from "react"
 
-export default function Home() {
+interface HomePageProps {
+  searchParams: SearchParams
+}
+
+export default function HomePage({ searchParams }: HomePageProps) {
+  const duration = (searchParams.duration ?? 30) as DURATION
+
   return (
     <main className="min-h-screen flex-col items-stretch justify-stretch grid grid-cols-12 w-full gap-0">
       {/* Sidebar */}
@@ -28,10 +36,15 @@ export default function Home() {
         {/* Overview Cards */}
         <Overview>
           {/* Header */}
-          <Overview.Header withDropdown />
+          <Overview.Header
+            withDropdown
+            duration={duration}
+          />
 
           {/* Cards */}
-          <Overview.CardsGrid />
+          <Suspense fallback={<>Loading...</>}>
+            <Overview.CardsGrid duration={duration} />
+          </Suspense>
         </Overview>
       </section>
     </main>

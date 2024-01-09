@@ -1,8 +1,8 @@
 import { Card } from "@/components//ui/card"
+import { OVERVIEW_DATA } from "@/lib/types"
 import { formatCurrency } from "@/lib/utils"
-import { OVERVIEW_DATA } from "./data"
 
-type OverviewCardProps = OVERVIEW_DATA[number]
+type OverviewCardProps = OVERVIEW_DATA
 
 export default function OverviewCard({
   label,

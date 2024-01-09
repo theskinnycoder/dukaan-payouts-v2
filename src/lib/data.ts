@@ -1,10 +1,6 @@
-export type OVERVIEW_DATA = {
-  label: string
-  value: string | number
-  formatter: "currency" | "number"
-}[]
+import { OVERVIEW_DATA } from "./types"
 
-export const overviewData = [
+export const overviewData: OVERVIEW_DATA[] = [
   {
     label: "Online orders",
     value: 231,
@@ -15,4 +11,4 @@ export const overviewData = [
     value: 23_92_312.19,
     formatter: "currency",
   },
-] satisfies OVERVIEW_DATA
+]
